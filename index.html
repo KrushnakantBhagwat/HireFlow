@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HireFlow — Recruitment Manifest</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ============ AUTH / GATE SCREEN ============ -->
+  <section id="screen-auth" class="screen active">
+    <header class="gate-header">
+      <div class="wordmark">
+        <span class="flap-letter">H</span><span class="flap-letter">I</span><span class="flap-letter">R</span><span class="flap-letter">E</span><span class="flap-letter accent">F</span><span class="flap-letter accent">L</span><span class="flap-letter accent">O</span><span class="flap-letter accent">W</span>
+      </div>
+      <p class="gate-sub">Recruitment manifest — candidates and roles, tracked in one board.</p>
+    </header>
+
+    <div class="gate-split">
+
+      <!-- Candidate gate -->
+      <div class="gate-panel" id="gate-candidate">
+        <div class="gate-panel-head">
+          <span class="gate-code">C</span>
+          <div>
+            <h2>Candidate desk</h2>
+            <p>Apply, upload your resume, see how you match.</p>
+          </div>
+        </div>
+
+        <div class="tab-row">
+          <button class="tab-btn active" data-tab="cand-login">Log in</button>
+          <button class="tab-btn" data-tab="cand-register">Register</button>
+        </div>
+
+        <form id="form-cand-login" class="tab-pane active" data-pane="cand-login">
+          <label>Email
+            <input type="email" required placeholder="you@email.com" id="login-email">
+          </label>
+          <label>Password
+            <input type="password" required placeholder="••••••••" id="login-password">
+          </label>
+          <button type="submit" class="btn btn-primary">Enter candidate desk</button>
+          <p class="hint">No account yet? This is a prototype — any saved registration will work, or use the demo below.</p>
+          <button type="button" class="btn btn-ghost" id="btn-demo-candidate">Continue with demo profile</button>
+        </form>
+
+        <form id="form-cand-register" class="tab-pane" data-pane="cand-register">
+          <label>Full name
+            <input type="text" required placeholder="Asha Rao" id="reg-name">
+          </label>
+          <label>Email
+            <input type="email" required placeholder="you@email.com" id="reg-email">
+          </label>
+          <label>Password
+            <input type="password" required placeholder="Create a password" id="reg-password">
+          </label>
+          <button type="submit" class="btn btn-primary">Create account</button>
+        </form>
+      </div>
+
+      <!-- HR gate -->
+      <div class="gate-panel" id="gate-hr">
+        <div class="gate-panel-head">
+          <span class="gate-code">HR</span>
+          <div>
+            <h2>HR terminal</h2>
+            <p>Review the funnel, score candidates, run reports.</p>
+          </div>
+        </div>
+
+        <form id="form-hr-login" class="tab-pane active">
+          <label>Work email
+            <input type="email" required placeholder="hr@company.com" id="hr-email">
+          </label>
+          <label>Access code
+            <input type="password" required placeholder="Access code" id="hr-code">
+          </label>
+          <button type="submit" class="btn btn-primary btn-amber">Enter HR terminal</button>
+          <p class="hint">Prototype access — any email and code will open the terminal.</p>
+        </form>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ CANDIDATE DASHBOARD ============ -->
+  <section id="screen-candidate" class="screen">
+    <header class="topbar">
+      <div class="wordmark small"><span class="flap-letter">H</span><span class="flap-letter">F</span></div>
+      <div class="topbar-title">Candidate desk</div>
+      <div class="topbar-right">
+        <span id="cand-name-display" class="who">—</span>
+        <button class="btn btn-ghost btn-sm" id="btn-cand-logout">Log out</button>
+      </div>
+    </header>
+
+    <main class="board-grid">
+
+      <!-- Profile -->
+      <div class="board-card">
+        <div class="board-card-head"><span class="row-code">01</span><h3>Profile</h3></div>
+        <form id="form-profile" class="profile-form">
+          <label>Full name <input type="text" id="p-name"></label>
+          <label>Email <input type="email" id="p-email"></label>
+          <label>Contact number <input type="tel" id="p-contact"></label>
+          <label>Education <textarea id="p-education" rows="2" placeholder="B.Tech Computer Science, 2023"></textarea></label>
+          <label>Experience <textarea id="p-experience" rows="3" placeholder="2 years — Frontend Developer at ..."></textarea></label>
+          <button type="submit" class="btn btn-primary btn-sm">Save profile</button>
+          <span class="save-flag" id="profile-saved">Saved</span>
+        </form>
+      </div>
+
+      <!-- Resume + analyzer -->
+      <div class="board-card">
+        <div class="board-card-head"><span class="row-code">02</span><h3>Resume analyzer</h3></div>
+
+        <div class="upload-row">
+          <input type="file" id="resume-file" accept=".pdf,.doc,.docx" hidden>
+          <button class="btn btn-outline btn-sm" id="btn-choose-file">Choose resume file</button>
+          <span id="resume-filename" class="filename">No file selected</span>
+        </div>
+
+        <label class="job-select-label">Compare against role
+          <select id="job-select"></select>
+        </label>
+
+        <button class="btn btn-primary btn-sm" id="btn-analyze">Analyze &amp; score match</button>
+
+        <div id="analyzer-result" class="analyzer-result hidden">
+          <div class="skills-block">
+            <p class="mini-label">Skills detected</p>
+            <div id="skills-detected" class="chip-row"></div>
+          </div>
+          <div class="skills-block">
+            <p class="mini-label">Role requires</p>
+            <div id="skills-required" class="chip-row"></div>
+          </div>
+          <div class="score-board">
+            <span class="mini-label">Match score</span>
+            <div class="flip-score" id="match-score">00</div>
+            <span class="score-unit">%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Open roles -->
+      <div class="board-card">
+        <div class="board-card-head"><span class="row-code">03</span><h3>Open roles</h3></div>
+        <div id="candidate-jobs-list" class="manifest-list"></div>
+      </div>
+
+      <!-- Application status -->
+      <div class="board-card">
+        <div class="board-card-head"><span class="row-code">04</span><h3>Your application</h3></div>
+        <div id="candidate-status-block" class="status-block">
+          <p class="muted">Apply to a role above to track its status here.</p>
+        </div>
+      </div>
+
+    </main>
+  </section>
+
+  <!-- ============ HR DASHBOARD ============ -->
+  <section id="screen-hr" class="screen">
+    <header class="topbar">
+      <div class="wordmark small"><span class="flap-letter">H</span><span class="flap-letter">F</span></div>
+      <div class="topbar-title">HR terminal</div>
+      <div class="topbar-right">
+        <button class="btn btn-outline btn-sm" id="btn-final-report">Final report</button>
+        <button class="btn btn-ghost btn-sm" id="btn-hr-logout">Log out</button>
+      </div>
+    </header>
+
+    <main class="hr-main">
+
+      <!-- KPI row -->
+      <section class="kpi-row" id="kpi-row"></section>
+
+      <div class="hr-columns">
+        <!-- Funnel -->
+        <section class="board-card">
+          <div class="board-card-head"><span class="row-code">A</span><h3>Hiring funnel</h3></div>
+          <div id="funnel-board" class="funnel-board"></div>
+        </section>
+
+        <!-- Monthly analytics -->
+        <section class="board-card">
+          <div class="board-card-head"><span class="row-code">B</span><h3>Monthly applications</h3></div>
+          <div id="analytics-chart" class="analytics-chart"></div>
+        </section>
+      </div>
+
+      <!-- Job openings -->
+      <section class="board-card">
+        <div class="board-card-head">
+          <span class="row-code">C</span><h3>Job openings</h3>
+          <button class="btn btn-outline btn-sm" id="btn-add-job">Add opening</button>
+        </div>
+        <div id="jobs-manifest" class="manifest-list"></div>
+      </section>
+
+      <!-- Candidate manifest -->
+      <section class="board-card">
+        <div class="board-card-head"><span class="row-code">D</span><h3>Candidate manifest</h3></div>
+
+        <div class="filter-row">
+          <input type="text" id="filter-search" placeholder="Search candidate name...">
+          <select id="filter-job"><option value="">All roles</option></select>
+          <select id="filter-status">
+            <option value="">All statuses</option>
+            <option value="applied">Applied</option>
+            <option value="screened">Screened</option>
+            <option value="shortlisted">Shortlisted</option>
+            <option value="interview">Interview</option>
+            <option value="hired">Hired</option>
+            <option value="rejected">Rejected</option>
+          </select>
+        </div>
+
+        <div class="table-wrap">
+          <table class="candidate-table">
+            <thead>
+              <tr>
+                <th>Candidate</th>
+                <th>Role applied</th>
+                <th>AI score</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="candidate-table-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+  </section>
+
+</div>
+
+<!-- ============ MODALS ============ -->
+<div class="modal-overlay" id="modal-email">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="row-code">✉</span>
+      <h3>Selection email — preview</h3>
+      <button class="modal-close" data-close="modal-email">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p class="mini-label">To</p>
+      <p id="email-to" class="email-field"></p>
+      <p class="mini-label">Subject</p>
+      <p id="email-subject" class="email-field"></p>
+      <p class="mini-label">Message</p>
+      <pre id="email-body" class="email-body"></pre>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost btn-sm" data-close="modal-email">Cancel</button>
+      <button class="btn btn-primary btn-sm" id="btn-send-email">Send email</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-report">
+  <div class="modal modal-wide">
+    <div class="modal-head">
+      <span class="row-code">R</span>
+      <h3>Final recruitment report</h3>
+      <button class="modal-close" data-close="modal-report">&times;</button>
+    </div>
+    <div class="modal-body" id="report-body"></div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost btn-sm" data-close="modal-report">Close</button>
+      <button class="btn btn-primary btn-sm" id="btn-download-report">Download report (.txt)</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
